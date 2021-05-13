@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Iotag - Apontamento de problemas na rota</p>
+
+<button onclick="getLocation('Buraco')">Buraco</button>
+<button onclick="getLocation('Desnivel')">Desnível</button>
+<button onclick="getLocation('Objeto')">Objeto na pista</button>
+
+<p id="demo"></p>
+<p id="result"></p>
+
+<script>
+var x = document.getElementById("demo");
+var y = document.getElementById("result");
+
+function getLocation(type) {
+  x.innerHTML = ""
+  if (navigator.geolocation) {
+    if (type === 'Buraco') {
+        navigator.geolocation.getCurrentPosition(sendBuracoPosition);
+    }
+    if (type === 'Desnivel') {
+        navigator.geolocation.getCurrentPosition(sendDesnivelPosition);
+    }
+    if (type === 'Objeto') {
+        navigator.geolocation.getCurrentPosition(sendObjetoPosition);
+    }
+  } else { 
+    x.innerHTML = "Não é possível apontar com este navegador. Por favor, tente em outro.";
+  }
+}
+
+
+function sendBuracoPosition(position) {
+  sendToServer('Buraco', position.coords.latitude, position.coords.longitude)
+  y.innerHTML = position.coords.latitude
+}
+function sendDesnivelPosition(position) {
+  sendToServer('Desnivel', position.coords.latitude, position.coords.longitude)
+}
+function sendObjetoPosition(position) {
+  sendToServer('Objeto', position.coords.latitude, position.coords.longitude)
+}
+
+function sendToServer(type, lat, lng) {
+  let apontamento = {
+    ap_type: type,
+    lat: lat,
+    lng: lng
+  }
+  console.log(apontamento)
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        x.innerHTML = "Apontado com sucesso"
+    }
+  };
+  xhttp.open("POST", "https://lots-iotag.herokuapp.com/", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(apontamento));
+}
+
+</script>
+
+</body>
+</html>
