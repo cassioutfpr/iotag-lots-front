@@ -1,19 +1,47 @@
 <!DOCTYPE html>
 <html>
-<body>
+<body style="background-color: #726f70">
 
-<p>Iotag - Apontamento de problemas na rota</p>
+<div style="width: 100%; padding: 0px; margin: 0px; text-align: center;">
+     <img src="logo.png" alt="logo" width="200" height="160"> 
+</div>
 
-<button onclick="getLocation('Buraco')">Buraco</button>
-<button onclick="getLocation('Desnivel')">Desnível</button>
-<button onclick="getLocation('Objeto')">Objeto na pista</button>
 
-<p id="demo"></p>
-<p id="result"></p>
+<p id="result" style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold"></p>
+
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Buraco')" style="background-color: #83fcd4">Buraco</button>
+</div>
+
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Desnivel')" style="background-color: #b5fc83">Desnível</button>
+</div>
+
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Objeto')" style="background-color: #fcd083">Objeto na pista</button>     
+</div>
+
+<p id="sendDataResult" style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold"></p>
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="sendToServer()" style="background-color: #64969e;width: 60vw">Enviar dados</button>     
+</div>
+
+
+<style type="text/css">
+    button {
+        border-radius: 10px;
+        height:10vh;
+        width:40vw;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 5vh;
+    }
+</style>
 
 <script>
-var x = document.getElementById("demo");
+var x = document.getElementById("sendDataResult");
 var y = document.getElementById("result");
+var apontamentos = []
 
 function getLocation(type) {
   x.innerHTML = ""
@@ -34,33 +62,49 @@ function getLocation(type) {
 
 
 function sendBuracoPosition(position) {
-  sendToServer('Buraco', position.coords.latitude, position.coords.longitude)
-  y.innerHTML = position.coords.latitude
+
+    apontamentos.push({
+        type_ap: 'Buraco',
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+    })
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 function sendDesnivelPosition(position) {
-  sendToServer('Desnivel', position.coords.latitude, position.coords.longitude)
+    apontamentos.push({
+        type_ap: 'Desnivel',
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+    })
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 function sendObjetoPosition(position) {
-  sendToServer('Objeto', position.coords.latitude, position.coords.longitude)
+    apontamentos.push({
+        type_ap: 'Objeto',
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+    })
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 
-function sendToServer(type, lat, lng) {
-  let apontamento = {
-    ap_type: type,
-    lat: lat,
-    lng: lng
+function sendToServer() {
+  
+  let apontamentoToSend = {
+    apnt: apontamentos
   }
-  console.log(apontamento)
 
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+        y.innerHTML = ""
         x.innerHTML = "Apontado com sucesso"
     }
   };
-  xhttp.open("POST", "https://lots-iotag.herokuapp.com/", true);
+  xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
   xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send(JSON.stringify(apontamento));
+  xhttp.send(JSON.stringify(apontamentoToSend));
+
+  apontamentos = []
 }
 
 </script>
