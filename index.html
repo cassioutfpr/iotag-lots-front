@@ -2,26 +2,24 @@
 <html>
 <body style="background-color: #726f70">
 
-<div style="width: 100%; padding: 0px; margin: 0px; text-align: center;">
-     <img src="logo.png" alt="logo" width="400" height="300"> 
+<div style="width: 100%; padding: 0px; margin: 0px; text-align: center;margin-bottom: 10vh">
+     <img src="logo.png" alt="logo" width="400" height="280"> 
 </div>
 
 
 <p id="result" style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;"></p>
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
-    <button onclick="getLocation('Buraco')" style="background-color: #83fcd4">Buraco</button>
-</div>
-
-<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Buraco')" style="background-color: #83fcd4; margin-right: 5vw">Buraco</button>
     <button onclick="getLocation('Desnivel')" style="background-color: #b5fc83">Desnível</button>
 </div>
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
-    <button onclick="getLocation('Objeto')" style="background-color: #fcd083">Objeto na pista</button>     
+    <button onclick="getLocation('Objeto')" style="background-color: #fcd083; margin-right: 5vw">Objeto na pista</button>
+    <button onclick="getLocation('Poca')" style="background-color: #c184fb">Poça D'água</button>
 </div>
 
-<p id="sendDataResult" style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;"></p>
+<p id="sendDataResult" style="width: 100%; margin-bottom: 10px; margin-top: 20vh;text-align: center;font-weight: bold;font-size: 36px;"></p>
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
     <button onclick="sendToServer()" style="background-color: #64969e;width: 60vw">Enviar dados</button>     
 </div>
@@ -47,13 +45,24 @@ function getLocation(type) {
   x.innerHTML = ""
   if (navigator.geolocation) {
     if (type === 'Buraco') {
+      if (confirm("Deseja apontar um buraco na pista?")) {
         navigator.geolocation.getCurrentPosition(sendBuracoPosition);
+      }
     }
     if (type === 'Desnivel') {
+      if (confirm("Deseja apontar um desnível na pista?")) {
         navigator.geolocation.getCurrentPosition(sendDesnivelPosition);
+      }
     }
     if (type === 'Objeto') {
+      if (confirm("Deseja apontar um objeto na pista?")) {
         navigator.geolocation.getCurrentPosition(sendObjetoPosition);
+      }
+    }
+    if (type === 'Poca') {
+      if (confirm("Deseja apontar uma poça d'água na pista?")) {
+        navigator.geolocation.getCurrentPosition(sendPocaPosition);
+      }
     }
   } else { 
     x.innerHTML = "Não é possível apontar com este navegador. Por favor, tente em outro.";
@@ -81,6 +90,14 @@ function sendDesnivelPosition(position) {
 function sendObjetoPosition(position) {
     apontamentos.push({
         type_ap: 'Objeto',
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+    })
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+}
+function sendPocaPosition(position) {
+    apontamentos.push({
+        type_ap: 'Poca',
         lat: position.coords.latitude,
         lng: position.coords.longitude
     })
