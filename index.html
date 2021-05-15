@@ -40,6 +40,44 @@
 var x = document.getElementById("sendDataResult");
 var y = document.getElementById("result");
 var apontamentos = []
+var apntTypeGet = localStorage.getItem('apntType')
+var apntLatGet = localStorage.getItem('apntLat')
+var apntLngGet = localStorage.getItem('apntLng')
+var apntTimestampGet = localStorage.getItem('apntTimestamp')
+var apntType = []
+var apntLat = []
+var apntLng = []
+var apntTimestamp = []
+
+console.log(apntType)
+
+initializeArrays();
+
+function initializeArrays() {
+    if (!apntTypeGet) {
+        apntType = []
+    } else {
+        apntType = apntTypeGet.split(',');
+    }
+
+    if (!apntLatGet) {
+        apntLat = []
+    } else {
+        apntLat = apntLatGet.split(',');
+    }
+
+    if (!apntLngGet) {
+        apntLng = []
+    } else {
+        apntLng = apntLngGet.split(',');
+    }
+
+    if (!apntTimestampGet) {
+        apntTimestamp = []
+    } else {
+        apntTimestamp = apntTimestampGet.split(',');
+    }
+}
 
 function getLocation(type) {
   x.innerHTML = ""
@@ -71,56 +109,133 @@ function getLocation(type) {
 
 
 function sendBuracoPosition(position) {
+    
+    let timestamp = new Date()
+    apntType.push('Buraco')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
 
-    apontamentos.push({
-        type_ap: 'Buraco',
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    })
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
     y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 function sendDesnivelPosition(position) {
-    apontamentos.push({
-        type_ap: 'Desnivel',
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    })
+
+    let timestamp = new Date()
+    apntType.push('Desnivel')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
     y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 function sendObjetoPosition(position) {
-    apontamentos.push({
-        type_ap: 'Objeto',
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    })
+
+    let timestamp = new Date()
+    apntType.push('Objeto')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
     y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 function sendPocaPosition(position) {
-    apontamentos.push({
-        type_ap: 'Poca',
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    })
+
+    let timestamp = new Date()
+    apntType.push('Poca')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
     y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 
 function sendToServer() {
-  
-  let apontamentoToSend = {
-    apnt: apontamentos
-  }
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        y.innerHTML = ""
-        x.innerHTML = "Apontado com sucesso"
-        apontamentos = []
+    let typeFromLS = localStorage.getItem('apntType')
+    let latFromLS = localStorage.getItem('apntLat')
+    let lngFromLS = localStorage.getItem('apntLng')
+    let timestampFromLS = localStorage.getItem('apntTimestamp')
+
+    let typeToSend = []
+    let latToSend = []
+    let lngToSend = []
+    let timestampToSend = []
+
+
+    if (!typeFromLS) {
+        typeToSend = []
+    } else {
+        typeToSend = typeFromLS.split(',');
     }
-  };
-  xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send(JSON.stringify(apontamentoToSend));
+
+    if (!latFromLS) {
+        latToSend = []
+    } else {
+        latToSend = latFromLS.split(',');
+    }
+
+    if (!lngFromLS) {
+        lngToSend = []
+    } else {
+        lngToSend = lngFromLS.split(',');
+    }
+
+    if (!timestampFromLS) {
+        timestampToSend = []
+    } else {
+        timestampToSend = timestampFromLS.split(',');
+    }
+
+    let apontamentos = []
+    for (let i = 0; i < typeToSend.length; i++ ) {
+        apontamentos.push({
+            type_ap: typeToSend[i],
+            lat: latToSend[i],
+            lng: lngToSend[i],
+            timestamp: timestampToSend[i]
+        })
+    }
+  
+    let apontamentoToSend = {
+       apnt: apontamentos
+    }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            y.innerHTML = ""
+            x.innerHTML = "Apontado com sucesso"
+            apontamentos = []
+            apntType = []
+            apntLat = []
+            apntLng = []
+            apntTimestamp = []
+            localStorage.clear()
+        }
+    };
+    xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(JSON.stringify(apontamentoToSend));
 }
 
 </script>
