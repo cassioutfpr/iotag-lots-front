@@ -46,7 +46,7 @@
         height:10vh;
         width:40vw;
         font-weight: bold;
-        font-size: 36px;
+        font-size: 40px;
         margin-bottom: 5vh;    
     }
 </style>
@@ -90,6 +90,10 @@ function initializeArrays() {
         apntTimestamp = []
     } else {
         apntTimestamp = apntTimestampGet.split(',');
+    }
+
+    if (apntType.length > 0) {
+        confirm("Há dados a serem enviados")
     }
 }
 
@@ -161,7 +165,7 @@ function sendBuracoPosition(position) {
 function sendDesnivelPosition(position) {
 
     let timestamp = new Date()
-    apntType.push('Desnivel')
+    apntType.push('Desnível')
     apntLat.push(position.coords.latitude)
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
@@ -193,7 +197,7 @@ function sendObjetoPosition(position) {
 function sendPocaPosition(position) {
 
     let timestamp = new Date()
-    apntType.push('Poca')
+    apntType.push('Poça')
     apntLat.push(position.coords.latitude)
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
@@ -317,6 +321,7 @@ function sendToServer() {
     }
 
     if (typeToSend.length === 0) {
+        confirm("Nada para enviar.")
         return;
     }
 
