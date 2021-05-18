@@ -2,7 +2,7 @@
 <html>
 <body style="background-color: #726f70">
 
-<div style="width: 100%; padding: 0px; margin: 0px; text-align: center;margin-bottom: 10vh">
+<div style="width: 100%; padding: 0px; margin: 0px; text-align: center;margin-bottom: 5vh">
      <img src="logo.png" alt="logo" width="400" height="280"> 
 </div>
 
@@ -16,10 +16,25 @@
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
     <button onclick="getLocation('Objeto')" style="background-color: #fcd083; margin-right: 5vw">Objeto na pista</button>
-    <button onclick="getLocation('Poca')" style="background-color: #c184fb">Poça D'água</button>
+    <button onclick="getLocation('Poça')" style="background-color: #c184fb">Poça D'água</button>
 </div>
 
-<p id="sendDataResult" style="width: 100%; margin-bottom: 10px; margin-top: 15vh;text-align: center;font-weight: bold;font-size: 36px;"></p>
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Quebra-molas')" style="background-color: #e8ffba; margin-right: 5vw">Quebra-molas</button>
+    <button onclick="getLocation('Cruzamento')" style="background-color: #bad5ff">Cruzamento</button>
+</div>
+
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Ponte sobre rio')" style="background-color: #ffd6ba; margin-right: 5vw">Ponte sobre rio</button>
+    <button onclick="getLocation('Banca de areia')" style="background-color: #ffa8cc">Banca de areia</button>
+</div>
+
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center; height: 5vh">
+    <input id="vehicle" type="text" class="form-control " name="vehicle" value="" placeholder="Veículo" 
+    style="width: 90%; height: 100%; font-size: 38px">
+</div>
+
+<p id="sendDataResult" style="width: 100%; margin-bottom: 10px; margin-top: 5vh;text-align: center;font-weight: bold;font-size: 36px;"></p>
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
     <button onclick="sendToServer()" style="background-color: #64969e;width: 60vw">Enviar dados</button>     
 </div>
@@ -40,6 +55,7 @@
 var x = document.getElementById("sendDataResult");
 var y = document.getElementById("result");
 var apontamentos = []
+document.getElementById("vehicle").value = localStorage.getItem('vehicle')
 var apntTypeGet = localStorage.getItem('apntType')
 var apntLatGet = localStorage.getItem('apntLat')
 var apntLngGet = localStorage.getItem('apntLng')
@@ -48,8 +64,6 @@ var apntType = []
 var apntLat = []
 var apntLng = []
 var apntTimestamp = []
-
-console.log(apntType)
 
 initializeArrays();
 
@@ -97,9 +111,29 @@ function getLocation(type) {
         navigator.geolocation.getCurrentPosition(sendObjetoPosition);
       }
     }
-    if (type === 'Poca') {
+    if (type === 'Poça') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
         navigator.geolocation.getCurrentPosition(sendPocaPosition);
+      }
+    }
+    if (type === 'Quebra-molas') {
+      if (confirm("Deseja apontar uma poça d'água na pista?")) {
+        navigator.geolocation.getCurrentPosition(sendQuebraPosition);
+      }
+    }
+    if (type === 'Cruzamento') {
+      if (confirm("Deseja apontar uma poça d'água na pista?")) {
+        navigator.geolocation.getCurrentPosition(sendCruzamentoPosition);
+      }
+    }
+    if (type === 'Ponte sobre rio') {
+      if (confirm("Deseja apontar uma poça d'água na pista?")) {
+        navigator.geolocation.getCurrentPosition(sendPontePosition);
+      }
+    }
+    if (type === 'Banca de areia') {
+      if (confirm("Deseja apontar uma poça d'água na pista?")) {
+        navigator.geolocation.getCurrentPosition(sendBancaPosition);
       }
     }
   } else { 
@@ -116,6 +150,7 @@ function sendBuracoPosition(position) {
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
 
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
@@ -131,6 +166,7 @@ function sendDesnivelPosition(position) {
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
 
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
@@ -146,6 +182,7 @@ function sendObjetoPosition(position) {
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
 
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
@@ -161,6 +198,71 @@ function sendPocaPosition(position) {
     apntLng.push(position.coords.longitude)
     apntTimestamp.push(timestamp.valueOf().toString())
 
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+}
+function sendQuebraPosition(position) {
+
+    let timestamp = new Date()
+    apntType.push('Quebra-molas')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+}
+function sendCruzamentoPosition(position) {
+
+    let timestamp = new Date()
+    apntType.push('Cruzamento')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+}
+function sendPontePosition(position) {
+
+    let timestamp = new Date()
+    apntType.push('Ponte sobre rio')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+
+    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+}
+function sendBancaPosition(position) {
+
+    let timestamp = new Date()
+    apntType.push('Banca de areia')
+    apntLat.push(position.coords.latitude)
+    apntLng.push(position.coords.longitude)
+    apntTimestamp.push(timestamp.valueOf().toString())
+
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
@@ -171,6 +273,8 @@ function sendPocaPosition(position) {
 
 function sendToServer() {
 
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+
     let typeFromLS = localStorage.getItem('apntType')
     let latFromLS = localStorage.getItem('apntLat')
     let lngFromLS = localStorage.getItem('apntLng')
@@ -180,6 +284,12 @@ function sendToServer() {
     let latToSend = []
     let lngToSend = []
     let timestampToSend = []
+    let vehicleToSend = document.getElementById("vehicle").value;
+
+    if (vehicleToSend === '') {
+        confirm("Insira o nome do veículo")
+        return;
+    }
 
 
     if (!typeFromLS) {
@@ -213,6 +323,7 @@ function sendToServer() {
     let apontamentos = []
     for (let i = 0; i < typeToSend.length; i++ ) {
         apontamentos.push({
+            vehicle: vehicleToSend,
             type_ap: typeToSend[i],
             lat: latToSend[i],
             lng: lngToSend[i],
@@ -229,6 +340,7 @@ function sendToServer() {
         if (this.readyState == 4 && this.status == 200) {
             y.innerHTML = ""
             x.innerHTML = "Apontado com sucesso"
+            document.getElementById("vehicle").value = ''
             apontamentos = []
             apntType = []
             apntLat = []
