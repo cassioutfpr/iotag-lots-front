@@ -97,47 +97,69 @@ function initializeArrays() {
     }
 }
 
+
+function addApntToLocalStorage(type) {
+    apntType.push(type)
+    apntLat.push(0)
+    apntLng.push(0)
+    apntTimestamp.push(new Date().valueOf().toString())
+
+    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
+    localStorage.setItem('apntType', apntType)
+    localStorage.setItem('apntLat', apntLat)
+    localStorage.setItem('apntLng', apntLng)
+    localStorage.setItem('apntTimestamp', apntTimestamp)
+}
+
 function getLocation(type) {
-  x.innerHTML = ""
+    x.innerHTML = ""
   if (navigator.geolocation) {
     if (type === 'Buraco') {
       if (confirm("Deseja apontar um buraco na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendBuracoPosition);
+        addApntToLocalStorage('Buraco');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Desnivel') {
       if (confirm("Deseja apontar um desnível na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendDesnivelPosition);
+        addApntToLocalStorage('Desnivel');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Objeto') {
       if (confirm("Deseja apontar um objeto na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendObjetoPosition);
+        addApntToLocalStorage('Objeto');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Poça') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendPocaPosition);
+        addApntToLocalStorage('Poca');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Quebra-molas') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendQuebraPosition);
+        addApntToLocalStorage('Quebra-molas');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Cruzamento') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendCruzamentoPosition);
+        addApntToLocalStorage('Cruzamento');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Ponte sobre rio') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendPontePosition);
+        addApntToLocalStorage('Ponte');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
     if (type === 'Banca de areia') {
       if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        navigator.geolocation.getCurrentPosition(sendBancaPosition);
+        addApntToLocalStorage('Banca de areia');
+        navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
   } else { 
@@ -145,133 +167,20 @@ function getLocation(type) {
   }
 }
 
-
-function sendBuracoPosition(position) {
+function updateLocalStorageWithCoordinates(lat, lng) {
     
-    let timestamp = new Date()
-    apntType.push('Buraco')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
+    apntLat[apntLat.length - 1] = lat;
+    apntLng[apntLng.length - 1] = lng;
 
     localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
+    localStorage.setItem('apntTimestamp', apntTimestamp)    
 }
-function sendDesnivelPosition(position) {
 
-    let timestamp = new Date()
-    apntType.push('Desnivel')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendObjetoPosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Objeto')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendPocaPosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Poca')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendQuebraPosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Quebra-molas')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendCruzamentoPosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Cruzamento')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendPontePosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Ponte sobre rio')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
-    y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
-}
-function sendBancaPosition(position) {
-
-    let timestamp = new Date()
-    apntType.push('Banca de areia')
-    apntLat.push(position.coords.latitude)
-    apntLng.push(position.coords.longitude)
-    apntTimestamp.push(timestamp.valueOf().toString())
-
-    localStorage.setItem('vehicle', document.getElementById("vehicle").value)
-    localStorage.setItem('apntType', apntType)
-    localStorage.setItem('apntLat', apntLat)
-    localStorage.setItem('apntLng', apntLng)
-    localStorage.setItem('apntTimestamp', apntTimestamp)
-
+function sendPosition(position) {
+    updateLocalStorageWithCoordinates(position.coords.latitude, position.coords.longitude)
     y.innerHTML = "Ponto " + position.coords.latitude.toFixed(4) + "|" + position.coords.longitude.toFixed(4) + " adicionado"
 }
 
@@ -320,7 +229,7 @@ function sendToServer() {
         timestampToSend = timestampFromLS.split(',');
     }
 
-    if (typeToSend.length === 0) {
+    if (timestampFromLS.length === 0) {
         confirm("Nada para enviar.")
         return;
     }
