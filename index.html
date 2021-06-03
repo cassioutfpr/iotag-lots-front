@@ -15,7 +15,7 @@
 </div>
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
-    <button onclick="getLocation('Objeto')" style="background-color: #fcd083; margin-right: 5vw">Objeto na pista</button>
+    <button onclick="getLocation('Curva')" style="background-color: #fcd083; margin-right: 5vw">Curva de nível</button>
     <button onclick="getLocation('Poça')" style="background-color: #c184fb">Poça D'água</button>
 </div>
 
@@ -126,9 +126,9 @@ function getLocation(type) {
         navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
-    if (type === 'Objeto') {
-      if (confirm("Deseja apontar um objeto na pista?")) {
-        addApntToLocalStorage('Objeto');
+    if (type === 'Curva') {
+      if (confirm("Deseja apontar uma curva de nível?")) {
+        addApntToLocalStorage('Curva');
         navigator.geolocation.getCurrentPosition(sendPosition);
       }
     }
