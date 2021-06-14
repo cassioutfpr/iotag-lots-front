@@ -272,7 +272,7 @@ function sendToServer() {
         timestampToSend = timestampFromLS.split(',');
     }
 
-    if (timestampFromLS || timestampFromLS.length === 0) {
+    if (!timestampFromLS || timestampFromLS.length === 0) {
         confirm("Nada para enviar.")
         return;
     }
