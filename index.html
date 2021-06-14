@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
 <body style="background-color: #726f70">
 
 <div style="width: 100%; padding: 0px; margin: 0px; text-align: center;margin-bottom: 5vh">
@@ -29,6 +33,10 @@
     <button onclick="getLocation('Banca de areia')" style="background-color: #ffa8cc">Banca de areia</button>
 </div>
 
+<div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
+    <button onclick="getLocation('Costela')" style="background-color: #fc8385;" id="costelaButton">Costela de Vaca</button>
+</div>
+
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center; height: 5vh">
     <input id="vehicle" type="text" class="form-control " name="vehicle" value="" placeholder="Veículo" 
     style="width: 90%; height: 100%; font-size: 38px">
@@ -36,7 +44,9 @@
 
 <p id="sendDataResult" style="width: 100%; margin-bottom: 10px; margin-top: 5vh;text-align: center;font-weight: bold;font-size: 36px;"></p>
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;">
-    <button onclick="sendToServer()" style="background-color: #64969e;width: 60vw">Enviar dados</button>     
+    <button onclick="sendToServer()" style="background-color: #64969e;width: 60vw" id="sendButton">
+        Enviar dados
+    </button>     
 </div>
 
 
@@ -64,6 +74,10 @@ var apntType = []
 var apntLat = []
 var apntLng = []
 var apntTimestamp = []
+var costelaOn = false
+var costelaButtonBlinkFactor = false
+var costelaButtonColors = ["#fc8385", "#fafc83"]
+var costelaInterval = null
 
 initializeArrays();
 
@@ -97,6 +111,11 @@ function initializeArrays() {
     }
 }
 
+function blinkCostela() {
+    var buttonElement = document.getElementById("costelaButton")
+    costelaButtonBlinkFactor = !costelaButtonBlinkFactor;
+    buttonElement.style.backgroundColor = costelaButtonBlinkFactor ? costelaButtonColors[0] : costelaButtonColors[1]
+}
 
 function addApntToLocalStorage(type) {
     apntType.push(type)
@@ -113,58 +132,82 @@ function addApntToLocalStorage(type) {
 
 function getLocation(type) {
     x.innerHTML = ""
-  if (navigator.geolocation) {
-    if (type === 'Buraco') {
-      if (confirm("Deseja apontar um buraco na pista?")) {
-        addApntToLocalStorage('Buraco');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
+    if (navigator.geolocation) {
+        if (type === 'Buraco') {
+          if (confirm("Deseja apontar um buraco na pista?")) {
+            addApntToLocalStorage('Buraco');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Desnivel') {
+          if (confirm("Deseja apontar um desnível na pista?")) {
+            addApntToLocalStorage('Desnivel');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Curva') {
+          if (confirm("Deseja apontar uma curva de nível?")) {
+            addApntToLocalStorage('Curva');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Poça') {
+          if (confirm("Deseja apontar uma poça d'água na pista?")) {
+            addApntToLocalStorage('Poca');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Quebra-molas') {
+          if (confirm("Deseja apontar uma poça d'água na pista?")) {
+            addApntToLocalStorage('Quebra-molas');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Cruzamento') {
+          if (confirm("Deseja apontar uma poça d'água na pista?")) {
+            addApntToLocalStorage('Cruzamento');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Ponte sobre rio') {
+          if (confirm("Deseja apontar uma poça d'água na pista?")) {
+            addApntToLocalStorage('Ponte');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Banca de areia') {
+          if (confirm("Deseja apontar uma poça d'água na pista?")) {
+            addApntToLocalStorage('Banca de areia');
+            navigator.geolocation.getCurrentPosition(sendPosition);
+          }
+        }
+        if (type === 'Costela') {
+            if (!costelaOn) {
+                if (confirm("Deseja começar a apontar costela de vaca na pista?")) {
+                    addApntToLocalStorage('Costela-Start');
+                    navigator.geolocation.getCurrentPosition(sendPosition);
+                    costelaInterval = setInterval(blinkCostela, 800);
+
+                    var costelaElement = document.getElementById("costelaButton")
+                    costelaElement.innerHTML = "Costela de Vaca - Parar";
+                    costelaOn = !costelaOn
+                }
+            } else {
+                if (confirm("Deseja parar de apontar costela de vaca na pista?")) {
+                    addApntToLocalStorage('Costela-End');
+                    navigator.geolocation.getCurrentPosition(sendPosition);
+                    clearInterval(costelaInterval)
+
+                    var costelaElement = document.getElementById("costelaButton")
+                    costelaElement.innerHTML = "Costela de Vaca";
+                    costelaElement.style.backgroundColor = costelaButtonColors[0]
+                    costelaOn = !costelaOn
+                }
+            }
+        }
+    } else { 
+        x.innerHTML = "Não é possível apontar com este navegador. Por favor, tente em outro.";
     }
-    if (type === 'Desnivel') {
-      if (confirm("Deseja apontar um desnível na pista?")) {
-        addApntToLocalStorage('Desnivel');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Curva') {
-      if (confirm("Deseja apontar uma curva de nível?")) {
-        addApntToLocalStorage('Curva');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Poça') {
-      if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        addApntToLocalStorage('Poca');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Quebra-molas') {
-      if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        addApntToLocalStorage('Quebra-molas');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Cruzamento') {
-      if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        addApntToLocalStorage('Cruzamento');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Ponte sobre rio') {
-      if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        addApntToLocalStorage('Ponte');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-    if (type === 'Banca de areia') {
-      if (confirm("Deseja apontar uma poça d'água na pista?")) {
-        addApntToLocalStorage('Banca de areia');
-        navigator.geolocation.getCurrentPosition(sendPosition);
-      }
-    }
-  } else { 
-    x.innerHTML = "Não é possível apontar com este navegador. Por favor, tente em outro.";
-  }
 }
 
 function updateLocalStorageWithCoordinates(lat, lng) {
@@ -249,6 +292,8 @@ function sendToServer() {
        apnt: apontamentos
     }
 
+    var sendButtonElement = document.getElementById("sendButton")
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -262,10 +307,14 @@ function sendToServer() {
             apntTimestamp = []
             localStorage.clear()
         }
+        sendButtonElement.innerHTML = "Enviar dados"
     };
     xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
+
+    
+    sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
 }
 
 </script>
