@@ -55,6 +55,25 @@
     </button>     
 </div>
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+       AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <style type="text/css">
     button {
@@ -143,10 +162,17 @@ function getLocation(type) {
         var inputImage = document.getElementById('uploadImage')
 
         inputImage.onchange = e => { 
+            //var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/png'); 
+            //newFile = new File([blob], 'name.png', {type: 'image/png'});
+            
             images.push(e.target.files[0])
         }
 
         images.forEach(imgm => {
+            Object.defineProperty(imgm, 'name', {
+              writable: true,
+              value: 'updatedFileName.png'
+            });
             console.log(imgm.name)
             console.log(imgm.size)
         })
