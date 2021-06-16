@@ -46,7 +46,7 @@
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center; height: 5vh">
     <input id="vehicle" type="text" class="form-control " name="vehicle" value="" placeholder="Veículo" 
-    style="width: 90%; height: 100%; font-size: 38px">
+    style="width: 70%; height: 100%; font-size: 38px">
 </div>
 
 <input type="file" style="display: none;" id="uploadImage" accept="image/*">
@@ -468,7 +468,6 @@ function sendImages() {
 
     images.forEach(imgm => {
         data.append('file[]', imgm);
-        console.log(imgm.name)
     })
     
     var xhttp = new XMLHttpRequest();
