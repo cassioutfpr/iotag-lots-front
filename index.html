@@ -458,9 +458,10 @@ function sendToServer() {
             apntTimestamp = []
             apntNota = []
             localStorage.clear()
-            sendImages()
+            document.getElementById("vehicle").value = ''
         }
         sendButtonElement.innerHTML = "Enviar dados"
+        sendImages()
     };
     xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
     xhttp.setRequestHeader("Content-type", "application/json");
@@ -484,7 +485,6 @@ function sendImages() {
         if (this.readyState == 4 && this.status == 200) {
             y.innerHTML = ""
             x.innerHTML = "Apontado com sucesso"
-            document.getElementById("vehicle").value = ''
         }
         sendButtonElement.innerHTML = "Enviar dados"
     };
