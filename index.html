@@ -469,6 +469,8 @@ function sendImages() {
     images.forEach(imgm => {
         data.append('file[]', imgm);
     })
+
+    images = [];
     
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
