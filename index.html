@@ -58,8 +58,6 @@
     </button>     
 </div>
 
-<!-- Trigger/Open The Modal -->
-<button id="myBtn">Open Modal</button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -69,18 +67,26 @@
     <p style="font-weight: bold">Dê uma nota ao apontamento</p>
 
     <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <button type="button" class="btn btn-outline-primary" style="font-size: 36px" onclick="setNota('Salvar')" >1</button>
-        <button type="button" class="btn btn-outline-primary" style="font-size: 36px">2</button>
-        <button type="button" class="btn btn-outline-primary" style="font-size: 36px">3</button>
-        <button type="button" class="btn btn-outline-primary" style="font-size: 36px">4</button>
-        <button type="button" class="btn btn-outline-primary" style="font-size: 36px">5</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(1)" >1</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(2)">2</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(3)">3</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(4)">4</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(5)">5</button>
     </div>
-        
+
+    <div style="font-weight: bold;margin-bottom: 5vh;">
+        Nota: <p id="nota" style="display: inline;font-size: 62"></p>
+    </div>
 
     <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;margin-bottom: 0;font-size: 36px">
-        <button type="button" class="btn btn-warning" onclick="getLocation('Salvar')" 
+        <button type="button" class="btn btn-warning" onclick="getImage()" id="imageButton"
         style="margin-right: 5vw;margin-bottom: 0;font-size: 36px;font-weight: bold">Foto</button>
-        <button type="button" class="btn btn-primary" onclick="getLocation('Foto')" 
+        <button type="button" class="btn btn-primary" onclick="saveNota()" 
         style="margin-bottom: 0;font-size: 36px;font-weight: bold">Salvar</button>
     </div>
 
@@ -98,42 +104,42 @@
         margin-bottom: 5vh;    
     }
     .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      padding-top: 100px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-      font-size: 36px
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        font-size: 36px
     }
 
     /* Modal Content */
     .modal-content {
-      background-color: #fefefe;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
     }
 
     /* The Close Button */
     .close {
-      color: #aaaaaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
     }
 
     .close:hover,
     .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
     }
 </style>
 
@@ -146,15 +152,18 @@ var apntTypeGet = localStorage.getItem('apntType')
 var apntLatGet = localStorage.getItem('apntLat')
 var apntLngGet = localStorage.getItem('apntLng')
 var apntTimestampGet = localStorage.getItem('apntTimestamp')
+var apntNotaGet = localStorage.getItem('apntNota')
 var apntType = []
 var apntLat = []
 var apntLng = []
 var apntTimestamp = []
+var apntNota = []
 var costelaOn = false
 var costelaButtonBlinkFactor = false
 var costelaButtonColors = ["#fc8385", "#fafc83"]
 var costelaInterval = null
 var images = []
+var nota = 1
 
 initializeArrays();
 
@@ -163,26 +172,47 @@ initializeArrays();
 // Get the modal
 var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+var notaHtml = document.getElementById("nota");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var imageButton = document.getElementById('imageButton')
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
 
 function setNota(argument) {
-    console.log('argument')
+    this.nota = argument
+    notaHtml.innerHTML = this.nota
+}
+
+function saveNota() {
+    apntNota[apntNota.length - 1] = this.nota
+    localStorage.setItem('apntNota', apntNota)
+    modal.style.display = "none";
+    imageButton.classList.remove('disabled')
+}
+
+function getImage() {
+        
+    var inputImage = document.getElementById('uploadImage')
+    
+    var timestamp = this.apntTimestamp[apntTimestamp.length - 1]
+
+    inputImage.onchange = e => { 
+        var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/png'); 
+        newFile = new File([blob], timestamp + '.png', {type: 'image/png'});
+        
+        images.push(newFile)
+        imageButton.classList.add('disabled')
+    }
+
+    /*images.forEach(imgm => {
+        Object.defineProperty(imgm, 'name', {
+          writable: true,
+          value: apntTimestampGet + '.png'
+        });
+        console.log(imgm.name)
+        console.log(imgm.size)
+    })*/
+
+    inputImage.click(); 
 }
 
 function initializeArrays() {
@@ -210,6 +240,13 @@ function initializeArrays() {
         apntTimestamp = apntTimestampGet.split(',');
     }
 
+    if (!apntNotaGet) {
+        apntNota = []
+    } else {
+        apntNota = apntNotaGet.split(',');
+    }
+
+
     if (apntType.length > 0) {
         confirm("Há dados a serem enviados")
     }
@@ -226,41 +263,24 @@ function addApntToLocalStorage(type) {
     apntLat.push(0)
     apntLng.push(0)
     apntTimestamp.push(new Date().valueOf().toString())
+    apntNota.push(0)
 
     localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
     localStorage.setItem('apntTimestamp', apntTimestamp)
+    localStorage.setItem('apntNota', apntNota)
 }
 
 function getLocation(type) {
     x.innerHTML = ""
+    notaHtml.innerHTML = this.nota
     if (navigator.geolocation) {
-        var inputImage = document.getElementById('uploadImage')
-
-        inputImage.onchange = e => { 
-            //var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/png'); 
-            //newFile = new File([blob], 'name.png', {type: 'image/png'});
-            
-            images.push(e.target.files[0])
-        }
-
-        images.forEach(imgm => {
-            Object.defineProperty(imgm, 'name', {
-              writable: true,
-              value: 'updatedFileName.png'
-            });
-            console.log(imgm.name)
-            console.log(imgm.size)
-        })
-
-        inputImage.click();
-
-
         if (type === 'Buraco') {
           if (confirm("Deseja apontar um buraco na pista?")) {
             addApntToLocalStorage('Buraco');
+            modal.style.display = "block";
             navigator.geolocation.getCurrentPosition(sendPosition);
           }
         }
@@ -360,11 +380,13 @@ function sendToServer() {
     let latFromLS = localStorage.getItem('apntLat')
     let lngFromLS = localStorage.getItem('apntLng')
     let timestampFromLS = localStorage.getItem('apntTimestamp')
+    let notaFromLS = localStorage.getItem('apntNota')
 
     let typeToSend = []
     let latToSend = []
     let lngToSend = []
     let timestampToSend = []
+    let notaToSend = []
     let vehicleToSend = document.getElementById("vehicle").value;
 
     if (vehicleToSend === '') {
@@ -397,6 +419,12 @@ function sendToServer() {
         timestampToSend = timestampFromLS.split(',');
     }
 
+    if (!notaFromLS) {
+        notaToSend = []
+    } else {
+        notaToSend = notaFromLS.split(',');
+    }
+
     if (!timestampFromLS || timestampFromLS.length === 0) {
         confirm("Nada para enviar.")
         return;
@@ -409,7 +437,8 @@ function sendToServer() {
             type_ap: typeToSend[i],
             lat: latToSend[i],
             lng: lngToSend[i],
-            timestamp: timestampToSend[i]
+            timestamp: timestampToSend[i],
+            nota: notaToSend[i]
         })
     }
   
@@ -418,19 +447,18 @@ function sendToServer() {
     }
 
     var sendButtonElement = document.getElementById("sendButton")
-
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            y.innerHTML = ""
-            x.innerHTML = "Apontado com sucesso"
-            document.getElementById("vehicle").value = ''
             apontamentos = []
             apntType = []
             apntLat = []
             apntLng = []
             apntTimestamp = []
+            apntNota = []
             localStorage.clear()
+            sendImages()
         }
         sendButtonElement.innerHTML = "Enviar dados"
     };
@@ -438,8 +466,28 @@ function sendToServer() {
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
 
-    
+    sendImages()
     sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
+}
+
+function sendImages() {
+    var data = new FormData();
+
+    images.forEach(imgm => {
+        data.append('file[]', imgm);
+        console.log(imgm.name)
+    })
+    //data.append('file', images);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            y.innerHTML = ""
+            x.innerHTML = "Apontado com sucesso"
+            document.getElementById("vehicle").value = ''
+        }
+    };
+    xhttp.open("POST", "https://lots-iotag.herokuapp.com/upload", true);
+    xhttp.send(data);
 }
 
 </script>
