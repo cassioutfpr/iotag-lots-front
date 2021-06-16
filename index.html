@@ -176,8 +176,6 @@ var notaHtml = document.getElementById("nota");
 
 var imageButton = document.getElementById('imageButton')
 
-var sendButtonElement = document.getElementById("sendButton")
-
 function setNota(argument) {
     this.nota = argument
     notaHtml.innerHTML = this.nota
@@ -437,6 +435,8 @@ function sendToServer() {
     let apontamentoToSend = {
        apnt: apontamentos
     }
+
+    var sendButtonElement = document.getElementById("sendButton")
     
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -462,7 +462,8 @@ function sendToServer() {
 
 function sendImages() {
     var data = new FormData();
-
+    var sendButtonElement = document.getElementById("sendButton")
+    
     sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
 
     images.forEach(imgm => {
