@@ -466,7 +466,6 @@ function sendToServer() {
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
 
-    sendImages()
     sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
 }
 
