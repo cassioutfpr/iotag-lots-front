@@ -473,11 +473,13 @@ function sendToServer() {
 function sendImages() {
     var data = new FormData();
 
+    sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
+
     images.forEach(imgm => {
         data.append('file[]', imgm);
         console.log(imgm.name)
     })
-    //data.append('file', images);
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -485,6 +487,7 @@ function sendImages() {
             x.innerHTML = "Apontado com sucesso"
             document.getElementById("vehicle").value = ''
         }
+        sendButtonElement.innerHTML = "Enviar dados"
     };
     xhttp.open("POST", "https://lots-iotag.herokuapp.com/upload", true);
     xhttp.send(data);
