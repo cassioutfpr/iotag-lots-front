@@ -176,6 +176,7 @@ var notaHtml = document.getElementById("nota");
 
 var imageButton = document.getElementById('imageButton')
 
+var sendButtonElement = document.getElementById("sendButton")
 
 function setNota(argument) {
     this.nota = argument
@@ -202,15 +203,6 @@ function getImage() {
         images.push(newFile)
         imageButton.classList.add('disabled')
     }
-
-    /*images.forEach(imgm => {
-        Object.defineProperty(imgm, 'name', {
-          writable: true,
-          value: apntTimestampGet + '.png'
-        });
-        console.log(imgm.name)
-        console.log(imgm.size)
-    })*/
 
     inputImage.click(); 
 }
@@ -445,8 +437,6 @@ function sendToServer() {
     let apontamentoToSend = {
        apnt: apontamentos
     }
-
-    var sendButtonElement = document.getElementById("sendButton")
     
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
