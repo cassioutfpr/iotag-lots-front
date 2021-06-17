@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+
 </head>
 
 <body style="background-color: #726f70">
 
+
+
 <div style="width: 100%; padding: 0px; margin: 0px; text-align: center;margin-bottom: 1vh">
      <img src="logo.png" alt="logo" width="400" height="280"> 
 </div>
-
 
 <p id="result" style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;"></p>
 
@@ -43,7 +47,7 @@
 
 <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center; height: 5vh">
     <input id="vehicle" type="text" class="form-control " name="vehicle" value="" placeholder="Veículo" 
-    style="width: 90%; height: 100%; font-size: 38px">
+    style="width: 70%; height: 100%; font-size: 38px">
 </div>
 
 <input type="file" style="display: none;" id="uploadImage" accept="image/*">
@@ -55,6 +59,42 @@
     </button>     
 </div>
 
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.1.0</p>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content" style="text-align: center">
+    <p style="font-weight: bold">Nota para apontamento</p>
+
+    <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(1)" >1</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(2)">2</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(3)">3</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(4)">4</button>
+        <button type="button" class="btn btn-outline-primary" 
+        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(5)">5</button>
+    </div>
+
+    <div style="font-weight: bold;margin-bottom: 5vh;">
+        Nota: <p id="nota" style="display: inline;font-size: 62"></p>
+    </div>
+
+    <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;margin-bottom: 0;font-size: 36px">
+        <button type="button" class="btn btn-warning" onclick="getImage()" id="imageButton"
+        style="margin-right: 5vw;margin-bottom: 0;font-size: 36px;font-weight: bold">Foto</button>
+        <button type="button" class="btn btn-primary" onclick="saveNota()" 
+        style="margin-bottom: 0;font-size: 36px;font-weight: bold">Salvar</button>
+    </div>
+
+  </div>
+
+</div>
 
 <style type="text/css">
     button {
@@ -65,28 +105,128 @@
         font-size: 40px;
         margin-bottom: 5vh;    
     }
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        font-size: 36px
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 
 <script>
 var x = document.getElementById("sendDataResult");
 var y = document.getElementById("result");
+var z = document.getElementById("sendImagesResult");
 var apontamentos = []
 document.getElementById("vehicle").value = localStorage.getItem('vehicle')
 var apntTypeGet = localStorage.getItem('apntType')
 var apntLatGet = localStorage.getItem('apntLat')
 var apntLngGet = localStorage.getItem('apntLng')
 var apntTimestampGet = localStorage.getItem('apntTimestamp')
+var apntNotaGet = localStorage.getItem('apntNota')
 var apntType = []
 var apntLat = []
 var apntLng = []
 var apntTimestamp = []
+var apntNota = []
 var costelaOn = false
 var costelaButtonBlinkFactor = false
 var costelaButtonColors = ["#fc8385", "#fafc83"]
 var costelaInterval = null
 var images = []
+var nota = 1
+//AWS.config.region = 'us-east-1'; // Região
+//AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//    IdentityPoolId: 'us-east-1:cd6b08b3-5f1e-4e0e-8991-3023a94183ab',
+//});
+
+// Inicializar o provedor de credenciais do Amazon Cognito
+AWS.config.region = 'sa-east-1'; // Região
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'sa-east-1:c8049141-7268-4aaa-b21a-65b53422b7a2',
+});
+
+var bucketName = 'apontamentos'; // Enter your bucket name
+var bucket = new AWS.S3({
+    params: {
+        Bucket: bucketName
+    }
+});
+
+// Get the modal
+var modal = document.getElementById("myModal");
+var notaHtml = document.getElementById("nota");
+var imageButton = document.getElementById('imageButton')
 
 initializeArrays();
+
+function setNota(argument) {
+    this.nota = argument
+    notaHtml.innerHTML = this.nota
+}
+
+function saveNota() {
+    apntNota[apntNota.length - 1] = this.nota
+    localStorage.setItem('apntNota', apntNota)
+    modal.style.display = "none";
+    imageButton.classList.remove('disabled')
+}
+
+function getFileExtension(filename) {
+    return filename.split('.').pop();
+}
+
+function getImage() {
+        
+    var inputImage = document.getElementById('uploadImage')
+    
+    var timestamp = this.apntTimestamp[apntTimestamp.length - 1]
+
+    inputImage.onchange = e => { 
+        if (e.target.files[0]) {
+            imageButton.classList.add('disabled')
+            let fileExtension = getFileExtension(e.target.files[0].name)
+            var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/' + fileExtension); 
+            newFile = new File([blob], timestamp + '.' + fileExtension, {type: 'image/' + fileExtension});
+            
+            images.push(newFile)
+        }
+    }
+
+    inputImage.click(); 
+}
 
 function initializeArrays() {
     if (!apntTypeGet) {
@@ -113,8 +253,15 @@ function initializeArrays() {
         apntTimestamp = apntTimestampGet.split(',');
     }
 
+    if (!apntNotaGet) {
+        apntNota = []
+    } else {
+        apntNota = apntNotaGet.split(',');
+    }
+
+
     if (apntType.length > 0) {
-        confirm("Há dados a serem enviados")
+        confirm("Há dados na memória. Envie-os antes de fazer outra coleta")
     }
 }
 
@@ -129,21 +276,24 @@ function addApntToLocalStorage(type) {
     apntLat.push(0)
     apntLng.push(0)
     apntTimestamp.push(new Date().valueOf().toString())
+    apntNota.push(0)
 
     localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
     localStorage.setItem('apntLat', apntLat)
     localStorage.setItem('apntLng', apntLng)
     localStorage.setItem('apntTimestamp', apntTimestamp)
+    localStorage.setItem('apntNota', apntNota)
 }
 
 function getLocation(type) {
     x.innerHTML = ""
+    notaHtml.innerHTML = this.nota
     if (navigator.geolocation) {
-
         if (type === 'Buraco') {
           if (confirm("Deseja apontar um buraco na pista?")) {
             addApntToLocalStorage('Buraco');
+            modal.style.display = "block";
             navigator.geolocation.getCurrentPosition(sendPosition);
           }
         }
@@ -243,11 +393,13 @@ function sendToServer() {
     let latFromLS = localStorage.getItem('apntLat')
     let lngFromLS = localStorage.getItem('apntLng')
     let timestampFromLS = localStorage.getItem('apntTimestamp')
+    let notaFromLS = localStorage.getItem('apntNota')
 
     let typeToSend = []
     let latToSend = []
     let lngToSend = []
     let timestampToSend = []
+    let notaToSend = []
     let vehicleToSend = document.getElementById("vehicle").value;
 
     if (vehicleToSend === '') {
@@ -280,6 +432,12 @@ function sendToServer() {
         timestampToSend = timestampFromLS.split(',');
     }
 
+    if (!notaFromLS) {
+        notaToSend = []
+    } else {
+        notaToSend = notaFromLS.split(',');
+    }
+
     if (!timestampFromLS || timestampFromLS.length === 0) {
         confirm("Nada para enviar.")
         return;
@@ -292,7 +450,8 @@ function sendToServer() {
             type_ap: typeToSend[i],
             lat: latToSend[i],
             lng: lngToSend[i],
-            timestamp: timestampToSend[i]
+            timestamp: timestampToSend[i],
+            nota: notaToSend[i]
         })
     }
   
@@ -301,31 +460,75 @@ function sendToServer() {
     }
 
     var sendButtonElement = document.getElementById("sendButton")
-
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            y.innerHTML = ""
-            x.innerHTML = "Apontado com sucesso"
-            document.getElementById("vehicle").value = ''
             apontamentos = []
             apntType = []
             apntLat = []
             apntLng = []
             apntTimestamp = []
+            apntNota = []
             localStorage.clear()
+            document.getElementById("vehicle").value = ''
+            y.innerHTML = ""
+            x.innerHTML = "Apontamentos enviados com sucesso"
+            if (images.length > 0) {
+                sendImages()
+            } else {
+                sendButtonElement.innerHTML = "Enviar dados"
+            }
+        } else if (this.readyState == 4) {
+            y.innerHTML = ""
+            x.innerHTML = "Ocorreu um erro"
+            sendButtonElement.innerHTML = "Enviar dados"
         }
-        sendButtonElement.innerHTML = "Enviar dados"
     };
-    xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
+    xhttp.open("POST", "https://teste-foto.herokuapp.com/write", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
 
-    
     sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
 }
 
+function sendImages() {
+    var sendButtonElement = document.getElementById("sendButton");
+    var everyImageSentWithSuccess = true;
+    var imagesLength = images.length;
+
+    images.forEach((imgm, index) => {
+        var objKey = imgm.name;
+        var params = {
+            Key: objKey,
+            ContentType: imgm.type,
+            Body: imgm,
+            ACL: 'public-read'
+        };
+
+        bucket.putObject(params, function(err, data) {
+            if (err) {
+                everyImageSentWithSuccess = false;
+                console.log('ERROR: ' + err)
+            } else {
+                if (index === imagesLength - 1) {
+                    if (everyImageSentWithSuccess) {
+                        x.innerHTML = "Apontamentos e imagens enviados com sucesso"
+                    }
+                }
+            }
+            if (index === imagesLength - 1) {
+                sendButtonElement.innerHTML = "Enviar dados"
+            }
+        })
+    })
+
+    images = [];
+}
+
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
 </body>
 </html>
