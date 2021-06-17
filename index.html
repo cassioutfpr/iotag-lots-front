@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.1.0</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.1.1</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -485,7 +485,7 @@ function sendToServer() {
             sendButtonElement.innerHTML = "Enviar dados"
         }
     };
-    xhttp.open("POST", "https://teste-foto.herokuapp.com/write", true);
+    xhttp.open("POST", "https://lots-iotag.herokuapp.com//write", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
 
