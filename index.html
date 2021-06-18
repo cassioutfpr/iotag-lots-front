@@ -85,6 +85,10 @@
         Nota: <p id="nota" style="display: inline;font-size: 62"></p>
     </div>
 
+    <div id="tireFoto" style="font-weight: bold;margin-bottom: 5vh;">
+        <p id="nota" style="display: inline;font-size: 62"></p>
+    </div>
+
     <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;margin-bottom: 0;font-size: 36px">
         <button type="button" class="btn btn-warning" onclick="getImage()" id="imageButton"
         style="margin-right: 5vw;margin-bottom: 0;font-size: 36px;font-weight: bold">Foto</button>
@@ -176,6 +180,7 @@ var nota = 1
 var modal = document.getElementById("myModal");
 var notaHtml = document.getElementById("nota");
 var imageButton = document.getElementById('imageButton')
+var tireFoto = document.getElementById('tireFoto')
 
 initializeArrays();
 
@@ -189,6 +194,7 @@ function saveNota() {
     localStorage.setItem('apntNota', apntNota)
     modal.style.display = "none";
     imageButton.classList.remove('disabled')
+    tireFoto.innerHTML = ''
 }
 
 function saveFoto() {
@@ -204,6 +210,7 @@ function getImage() {
 
     if (confirm("Confirmar foto para este apontamento?")) {
         saveFoto()
+        tireFoto.innerHTML = 'Tire a foto para o apontamento!'
         imageButton.classList.add('disabled')
     }
 }
