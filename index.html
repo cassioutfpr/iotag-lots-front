@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.1.2</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.2.0</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -220,6 +220,15 @@ function getImage() {
             let fileExtension = getFileExtension(e.target.files[0].name)
             var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/' + fileExtension); 
             newFile = new File([blob], timestamp + '.' + fileExtension, {type: 'image/' + fileExtension});
+			
+			
+			let objectURL = URL.createObjectURL(newFile);
+			var a = document.createElement('a');
+			a.download = newFile.name;
+			a.href = objectURL;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
             
             images.push(newFile)
         }
