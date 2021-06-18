@@ -485,7 +485,7 @@ function sendToServer() {
             sendButtonElement.innerHTML = "Enviar dados"
         }
     };
-    xhttp.open("POST", "https://lots-iotag.herokuapp.com//write", true);
+    xhttp.open("POST", "https://lots-iotag.herokuapp.com/write", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(apontamentoToSend));
 
