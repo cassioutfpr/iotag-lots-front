@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.1.2</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.2.0</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -156,34 +156,21 @@ var apntLatGet = localStorage.getItem('apntLat')
 var apntLngGet = localStorage.getItem('apntLng')
 var apntTimestampGet = localStorage.getItem('apntTimestamp')
 var apntNotaGet = localStorage.getItem('apntNota')
+var apntNotaGet = localStorage.getItem('apntNota')
+var apntFotoGet = localStorage.getItem('apntFoto')
 var apntType = []
 var apntLat = []
 var apntLng = []
 var apntTimestamp = []
 var apntNota = []
+var apntFoto = []
 var costelaOn = false
 var costelaButtonBlinkFactor = false
 var costelaButtonColors = ["#fc8385", "#fafc83"]
 var costelaInterval = null
 var images = []
 var nota = 1
-//AWS.config.region = 'us-east-1'; // Região
-//AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-//    IdentityPoolId: 'us-east-1:cd6b08b3-5f1e-4e0e-8991-3023a94183ab',
-//});
 
-// Inicializar o provedor de credenciais do Amazon Cognito
-AWS.config.region = 'sa-east-1'; // Região
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'sa-east-1:c8049141-7268-4aaa-b21a-65b53422b7a2',
-});
-
-var bucketName = 'apontamentos'; // Enter your bucket name
-var bucket = new AWS.S3({
-    params: {
-        Bucket: bucketName
-    }
-});
 
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -204,28 +191,21 @@ function saveNota() {
     imageButton.classList.remove('disabled')
 }
 
+function saveFoto() {
+    apntFoto[apntFoto.length - 1] = true
+    localStorage.setItem('apntFoto', apntFoto)
+}
+
 function getFileExtension(filename) {
     return filename.split('.').pop();
 }
 
 function getImage() {
-        
-    var inputImage = document.getElementById('uploadImage')
-    
-    var timestamp = this.apntTimestamp[apntTimestamp.length - 1]
 
-    inputImage.onchange = e => { 
-        if (e.target.files[0]) {
-            imageButton.classList.add('disabled')
-            let fileExtension = getFileExtension(e.target.files[0].name)
-            var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/' + fileExtension); 
-            newFile = new File([blob], timestamp + '.' + fileExtension, {type: 'image/' + fileExtension});
-            
-            images.push(newFile)
-        }
+    if (confirm("Confirmar foto para este apontamento?")) {
+        saveFoto()
+        imageButton.classList.add('disabled')
     }
-
-    inputImage.click(); 
 }
 
 function initializeArrays() {
@@ -259,6 +239,12 @@ function initializeArrays() {
         apntNota = apntNotaGet.split(',');
     }
 
+    if (!apntFotoGet) {
+        apntFoto = []
+    } else {
+        apntFoto = apntFotoGet.split(',');
+    }
+
 
     if (apntType.length > 0) {
         confirm("Há dados na memória. Envie-os antes de fazer outra coleta")
@@ -277,6 +263,7 @@ function addApntToLocalStorage(type) {
     apntLng.push(0)
     apntTimestamp.push(new Date().valueOf().toString())
     apntNota.push(0)
+    apntFoto.push(false)
 
     localStorage.setItem('vehicle', document.getElementById("vehicle").value)
     localStorage.setItem('apntType', apntType)
@@ -284,6 +271,7 @@ function addApntToLocalStorage(type) {
     localStorage.setItem('apntLng', apntLng)
     localStorage.setItem('apntTimestamp', apntTimestamp)
     localStorage.setItem('apntNota', apntNota)
+    localStorage.setItem('apntFoto', apntFoto)
 }
 
 function getLocation(type) {
@@ -394,12 +382,14 @@ function sendToServer() {
     let lngFromLS = localStorage.getItem('apntLng')
     let timestampFromLS = localStorage.getItem('apntTimestamp')
     let notaFromLS = localStorage.getItem('apntNota')
+    let fotoFromLS = localStorage.getItem('apntFoto')
 
     let typeToSend = []
     let latToSend = []
     let lngToSend = []
     let timestampToSend = []
     let notaToSend = []
+    let fotoToSend = []
     let vehicleToSend = document.getElementById("vehicle").value;
 
     if (vehicleToSend === '') {
@@ -438,6 +428,12 @@ function sendToServer() {
         notaToSend = notaFromLS.split(',');
     }
 
+    if (!fotoFromLS) {
+        fotoToSend = []
+    } else {
+        fotoToSend = fotoFromLS.split(',');
+    }
+
     if (!timestampFromLS || timestampFromLS.length === 0) {
         confirm("Nada para enviar.")
         return;
@@ -451,7 +447,8 @@ function sendToServer() {
             lat: latToSend[i],
             lng: lngToSend[i],
             timestamp: timestampToSend[i],
-            nota: notaToSend[i]
+            nota: notaToSend[i],
+            foto: fotoToSend[i]
         })
     }
   
@@ -470,15 +467,12 @@ function sendToServer() {
             apntLng = []
             apntTimestamp = []
             apntNota = []
+            apntFoto = []
             localStorage.clear()
             document.getElementById("vehicle").value = ''
             y.innerHTML = ""
             x.innerHTML = "Apontamentos enviados com sucesso"
-            if (images.length > 0) {
-                sendImages()
-            } else {
-                sendButtonElement.innerHTML = "Enviar dados"
-            }
+            sendButtonElement.innerHTML = "Enviar dados"
         } else if (this.readyState == 4) {
             y.innerHTML = ""
             x.innerHTML = "Ocorreu um erro"
@@ -490,39 +484,6 @@ function sendToServer() {
     xhttp.send(JSON.stringify(apontamentoToSend));
 
     sendButtonElement.innerHTML = "<i class=\"fa fa-circle-o-notch fa-spin\"></i> Enviar dados"
-}
-
-function sendImages() {
-    var sendButtonElement = document.getElementById("sendButton");
-    var everyImageSentWithSuccess = true;
-    var imagesLength = images.length;
-
-    images.forEach((imgm, index) => {
-        var objKey = imgm.name;
-        var params = {
-            Key: objKey,
-            ContentType: imgm.type,
-            Body: imgm,
-            ACL: 'public-read'
-        };
-
-        bucket.putObject(params, function(err, data) {
-            if (err) {
-                everyImageSentWithSuccess = false;
-                console.log('ERROR: ' + err)
-            } else {
-                if (index === imagesLength - 1) {
-                    if (everyImageSentWithSuccess) {
-                        x.innerHTML = "Apontamentos e imagens enviados com sucesso"
-                    }
-                }
-            }
-            if (index === imagesLength - 1) {
-                sendButtonElement.innerHTML = "Enviar dados"
-				images = [];
-            }
-        })
-    })
 }
 
 </script>
