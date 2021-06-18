@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.2.0</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.2.1</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -224,8 +224,10 @@ function getImage() {
 			
 			let objectURL = URL.createObjectURL(newFile);
 			var a = document.createElement('a');
+			a.setAttribute("type", "hidden");
+			a.href = "data:text/plain;base64," + base64;
 			a.download = newFile.name;
-			a.href = objectURL;
+			//a.href = objectURL;
 			document.body.appendChild(a);
 			a.click();
 			document.body.removeChild(a);
