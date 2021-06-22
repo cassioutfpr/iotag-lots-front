@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.2.0</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.3.0</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -75,14 +75,10 @@
         style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(2)">2</button>
         <button type="button" class="btn btn-outline-primary" 
         style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(3)">3</button>
-        <button type="button" class="btn btn-outline-primary" 
-        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(4)">4</button>
-        <button type="button" class="btn btn-outline-primary" 
-        style="font-size: 36px;margin-bottom: 5px;" onclick="setNota(5)">5</button>
     </div>
 
-    <div style="font-weight: bold;margin-bottom: 5vh;">
-        Nota: <p id="nota" style="display: inline;font-size: 62"></p>
+    <div style="font-weight: bold;margin-bottom: 5vh;font-size: 52px">
+        Nota: <p id="nota" style="display: inline;font-size: 62px"></p>
     </div>
 
     <div id="tireFoto" style="font-weight: bold;margin-bottom: 5vh;">
@@ -90,9 +86,9 @@
     </div>
 
     <div style="width: 100%; padding: 0px; margin: 0px; display: flex;justify-content: center;margin-bottom: 0;font-size: 36px">
-        <button type="button" class="btn btn-warning" onclick="getImage()" id="imageButton"
-        style="margin-right: 5vw;margin-bottom: 0;font-size: 36px;font-weight: bold">Foto</button>
-        <button type="button" class="btn btn-primary" onclick="saveNota()" 
+        <!--<button type="button" class="btn btn-warning" onclick="getImage()" id="imageButton"
+        style="margin-right: 5vw;margin-bottom: 0;font-size: 36px;font-weight: bold">Foto</button> -->
+        <button type="button" class="btn btn-primary" onclick="saveNota()"
         style="margin-bottom: 0;font-size: 36px;font-weight: bold">Salvar</button>
     </div>
 
@@ -194,6 +190,7 @@ function saveNota() {
     localStorage.setItem('apntNota', apntNota)
     modal.style.display = "none";
     imageButton.classList.remove('disabled')
+    this.nota = 1;
     tireFoto.innerHTML = ''
 }
 
@@ -349,6 +346,7 @@ function getLocation(type) {
                 if (confirm("Deseja parar de apontar costela de vaca na pista?")) {
                     addApntToLocalStorage('Costela-End');
                     navigator.geolocation.getCurrentPosition(sendPosition);
+                    modal.style.display = "block";
                     clearInterval(costelaInterval)
 
                     var costelaElement = document.getElementById("costelaButton")
