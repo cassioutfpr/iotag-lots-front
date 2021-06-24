@@ -59,7 +59,7 @@
     </button>     
 </div>
 
-<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.3.0</p>
+<p style="width: 100%; margin-bottom: 10px; text-align: center;font-weight: bold;font-size: 36px;">v0.3.1</p>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -175,7 +175,6 @@ var nota = 1
 // Get the modal
 var modal = document.getElementById("myModal");
 var notaHtml = document.getElementById("nota");
-var imageButton = document.getElementById('imageButton')
 var tireFoto = document.getElementById('tireFoto')
 
 initializeArrays();
@@ -189,7 +188,6 @@ function saveNota() {
     apntNota[apntNota.length - 1] = this.nota
     localStorage.setItem('apntNota', apntNota)
     modal.style.display = "none";
-    imageButton.classList.remove('disabled')
     this.nota = 1;
     tireFoto.innerHTML = ''
 }
@@ -208,7 +206,6 @@ function getImage() {
     if (confirm("Confirmar foto para este apontamento?")) {
         saveFoto()
         tireFoto.innerHTML = 'Tire a foto para o apontamento!'
-        imageButton.classList.add('disabled')
     }
 }
 
